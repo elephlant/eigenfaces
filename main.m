@@ -6,24 +6,9 @@ W = 92;
 
 data_matrix = read_ims_into_matrix(data_folder, num_samples, H, W);
 
-mean_row = mean(data_matrix);
+[avg_face,sorted_eigenfaces] = eigenfaces(data_matrix);
 
-face_diffs = data_matrix - mean_row; % PSI = A.T
-A = face_diffs.';
-
-% size(A)
-
-% Compute eigenvectors and values of 
-[V,D] = eig(A.'*A);
-% size(V)
-% size(D)
-[~,ind] = sort(diag(D),'descend');
-D_sorted = D(ind,ind);
-V_sorted = V(:,ind);
-
-sorted_eigenfaces = V_sorted.' * A.';
-
-num_eigenfaces = 10;
+num_eigenfaces = 5;
 
 for i=1:num_eigenfaces
     disp_ef = reshape(sorted_eigenfaces(i,:), [H,W]);
