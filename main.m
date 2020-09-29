@@ -1,6 +1,7 @@
 data_folder = "att_faces";
-num_samples = 400;
+num_ids = 40;
 ims_per_id = 10;
+samples_per_id = 10;
 
 % data_folder = "att_faces_simple";
 % num_samples = 20;
@@ -9,9 +10,12 @@ ims_per_id = 10;
 H = 112;
 W = 92;
 
-data_matrix = read_ims_into_matrix(data_folder, num_samples, ims_per_id, H, W);
+% train: (num_ids * samples_per_id) rows, cols = H*W
+% test: (num_ids * (ims_per_id - samples_per_id)) rows, cols = H*W
+% id_list: vector of num_ids length
+[train,test,id_list] = read_ims_into_matrix(data_folder, num_ids, ims_per_id, samples_per_id, H, W);
 
-[avg_face_vec,sorted_eigfaces] = eigenfaces(data_matrix);
+[avg_face_vec,sorted_eigfaces] = eigenfaces(train);
 % size(sorted_eigenfaces)
 % return
 % TODO: display according to assignment
@@ -26,7 +30,7 @@ data_matrix = read_ims_into_matrix(data_folder, num_samples, ims_per_id, H, W);
 %     imshow(uint8(disp_ef));
 %     pause;
 % end
-
+% 
 % close all
 % clear
 % return
@@ -38,7 +42,7 @@ data_matrix = read_ims_into_matrix(data_folder, num_samples, ims_per_id, H, W);
 % imshow(uint8(mean_face));
 % pause;
 
-sample_face = data_matrix(100,:);
+sample_face = train(200,:);
 sample_face = reshape(sample_face, [H,W]);
 imshow(uint8(sample_face));
 pause;

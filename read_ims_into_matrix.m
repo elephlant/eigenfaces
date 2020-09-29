@@ -1,42 +1,41 @@
-function data_matrix = read_ims_into_matrix(data_folder, num_samples, ims_per_id, H, W)
+function [train, test, id_list] = read_ims_into_matrix(data_folder, num_ids, ims_per_id, samples_per_id, H, W)
     % Read all images into a large matrix
     num_feats = H*W;
-    data_matrix = double(zeros( [num_samples, num_feats] ));
+    num_ims = num_ids * ims_per_id;
+    num_samples = num_ids * samples_per_id;
+    train = double(zeros( [num_samples, num_feats] ));
+    test = double(zeros( [num_ims - num_samples, num_feats] ));
+    id_list = zeros( [num_ids,1] );
     
-    % Get a list of all files and folders in this folder.
-    files = dir(data_folder);
+    % Get a list of folders that start with "s" in the root data folder.
+    files = dir(fullfile(data_folder, "s*"));
     % Get a logical vector that tells which is a directory.
     dir_flags = [files.isdir];
     % Extract only those that are directories.
-    sub_folders = files(dir_flags);
-    % Print folder names to command window.
-    for k = 1 : length(sub_folders)
-        sub_folder = sub_folders(k).name;
-        if startsWith(sub_folder, "s")
-            % Find the number of the folder
-            folder_num = str2num(extractAfter(sub_folder, "s"));
-            % Traverse the folder to read each image inside
-            full_sub_folder = fullfile(data_folder, sub_folder);
-            pgm_files = dir(full_sub_folder);
-            for j = 1: length(pgm_files)
-                pgm_file = pgm_files(j).name;
-                if endsWith(pgm_file, ".pgm")
-                    % Read image data
-                    pgm_fp = fullfile(data_folder, sub_folder, pgm_file);
-                    im = imread(pgm_fp);
-                    % Find the number of the image, compute the row index it
-                    % belongs to
-                    toks = split(pgm_file, ".");
-                    pgm_num = str2num( toks{1} );
-                    mat_idx = (folder_num - 1) * ims_per_id + pgm_num;
-%                     fprintf("%d: %s\n", mat_idx, pgm_fp);
-                    data_matrix(mat_idx,:) = im(:)';
-%                     size(data_matrix(mat_idx,:))
-%                     size(im(:)')
-    %                 fprintf("subfolder = %s, pgm_file = %s\n", sub_folder, pgm_file);
-                end
+    id_folders = files(dir_flags);
+    
+    train_idx = 0;
+    test_idx = 0;
+    for k = 1 : length(id_folders)
+        id_folder = id_folders(k).name;
+        curr_id = str2double(extractAfter(id_folder,"s"));
+        id_list(k) = int32(curr_id);
+        % Traverse the folder to read each image inside
+        full_sub_folder = fullfile(data_folder, id_folder, "*.pgm");
+        pgm_files = dir(full_sub_folder);
+        % Select a number of images from the person's folder
+        choices = randsample(length(pgm_files), samples_per_id);
+        for j =1:length(pgm_files)
+            pgm_file = pgm_files(j).name;
+            pgm_fp = fullfile(data_folder, id_folder, pgm_file);
+            im = imread(pgm_fp);
+            if ismember(j, choices)
+                train_idx = train_idx + 1;
+                train(train_idx,:) = im(:);
+            else
+                test_idx = test_idx + 1;
+                test(test_idx,:) = im(:);
             end
-    %         fprintf('Sub folder #%d = %s\n', k, full_sub_folder);
         end
     end
 end
