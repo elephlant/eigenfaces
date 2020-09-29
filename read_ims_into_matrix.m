@@ -1,9 +1,8 @@
-function data_matrix = read_ims_into_matrix(data_folder, num_samples, H, W)
+function data_matrix = read_ims_into_matrix(data_folder, num_samples, ims_per_id, H, W)
     % Read all images into a large matrix
     num_feats = H*W;
-    data_matrix = zeros( [num_samples, num_feats] );
-
-
+    data_matrix = double(zeros( [num_samples, num_feats] ));
+    
     % Get a list of all files and folders in this folder.
     files = dir(data_folder);
     % Get a logical vector that tells which is a directory.
@@ -29,8 +28,11 @@ function data_matrix = read_ims_into_matrix(data_folder, num_samples, H, W)
                     % belongs to
                     toks = split(pgm_file, ".");
                     pgm_num = str2num( toks{1} );
-                    mat_idx = (folder_num - 1) * 10 + pgm_num;
-                    data_matrix(mat_idx,:) = im(:);
+                    mat_idx = (folder_num - 1) * ims_per_id + pgm_num;
+%                     fprintf("%d: %s\n", mat_idx, pgm_fp);
+                    data_matrix(mat_idx,:) = im(:)';
+%                     size(data_matrix(mat_idx,:))
+%                     size(im(:)')
     %                 fprintf("subfolder = %s, pgm_file = %s\n", sub_folder, pgm_file);
                 end
             end
