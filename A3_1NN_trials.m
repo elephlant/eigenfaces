@@ -31,7 +31,7 @@ for i=1:length(Ms)
 end
 
 plot(Ms, m_scores, '-o', 'LineWidth', 3);
-title("Plot of No. Eigenfaces vs. FR-Accuracy");
+title("Part III: Plot of No. Eigenfaces vs. FR-Accuracy");
 xlabel("No. Eigenfaces Used");
 ylabel("Facial Recognition Accuracy (Over 10 Trials)");
 pause;
