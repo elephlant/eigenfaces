@@ -6,8 +6,8 @@ test_samples_per_id = ims_per_id - train_samples_per_id;
 H = 112;
 W = 92;
 
-% train: (num_ids * samples_per_id) rows, cols = H*W
-% test: (num_ids * (ims_per_id - samples_per_id)) rows, cols = H*W
+% train: (num_ids * train_samples_per_id) rows, cols = H*W
+% test: (num_ids * test_samples_per_id) rows, cols = H*W
 % id_list: vector of num_ids length
 [train,test,id_list] = read_ims_into_matrix(data_folder, num_ids, ims_per_id, train_samples_per_id, H, W);
 
@@ -37,10 +37,7 @@ cls_reps = compute_class_reps(train,train_samples_per_id,id_list,avg_face_vec,so
 
 [~, acc] = nnTrial(test,test_samples_per_id,id_list,avg_face_vec,sorted_eigfaces,M,cls_reps);
 
-acc
 
-clear;
-return;
 % Test: visualize the class reps
 % cls_recons = cls_reps * sorted_eigfaces(1:M,:);
 % for i=1:4

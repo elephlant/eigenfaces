@@ -1,4 +1,4 @@
-function [train, test, id_list] = read_ims_into_matrix(data_folder, num_ids, ims_per_id, samples_per_id, H, W)
+function [train, test, id_list] = read_data(data_folder, num_ids, ims_per_id, samples_per_id, H, W)
     % Read all images into a large matrix
     num_feats = H*W;
     num_ims = num_ids * ims_per_id;
