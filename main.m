@@ -9,7 +9,7 @@ W = 92;
 % train: (num_ids * train_samples_per_id) rows, cols = H*W
 % test: (num_ids * test_samples_per_id) rows, cols = H*W
 % id_list: vector of num_ids length
-[train,test,id_list] = read_ims_into_matrix(data_folder, num_ids, ims_per_id, train_samples_per_id, H, W);
+[train,test,id_list] = read_data(data_folder, num_ids, ims_per_id, train_samples_per_id, H, W);
 
 [avg_face_vec,sorted_eigfaces] = eigenfaces(train);
 
@@ -35,7 +35,7 @@ W = 92;
 M=100;
 cls_reps = compute_class_reps(train,train_samples_per_id,id_list,avg_face_vec,sorted_eigfaces,M);
 
-[~, acc] = nnTrial(test,test_samples_per_id,id_list,avg_face_vec,sorted_eigfaces,M,cls_reps);
+[~, acc] = nn_trial(test,test_samples_per_id,id_list,avg_face_vec,sorted_eigfaces,M,cls_reps);
 
 
 % Test: visualize the class reps
