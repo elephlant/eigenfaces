@@ -1,8 +1,9 @@
 function [avg_face,sorted_eigfaces] = eigenfaces(data_matrix)
     avg_face = mean(data_matrix);
     
-    face_diffs = data_matrix - avg_face; % PSI = A.T
+    face_diffs = data_matrix - avg_face; % This is PSI == A.T
     
+    % A is [Psi1 Psi2 ... PsiM], where each Psi is mean-subtracted face-vec
     A = face_diffs.';
     
     % Compute eigenvectors and eigenvalues of A.T * A
@@ -12,8 +13,14 @@ function [avg_face,sorted_eigfaces] = eigenfaces(data_matrix)
     [~,ind] = sort(diag(D),'descend');
     V_sorted = V(:,ind);
     
-    % A is [Psi1 Psi2 ... PsiM], where each Psi is column vector
-    % sorted_eigenfaces is num_samples x num_feats
+    % At this point, V_sorted are eigenvectors of A.T*A
+    % But we want eigenvectors of A*A.T
+    % If u is an eigenvector from A.T*A, then
+    % A*u is an eigenvector from A*A.T
+    
+    % A: features x M
+    % V_sorted: M x M
+    % sorted_eigenfaces is M x features
     sorted_eigfaces = (A*V_sorted)';
 
     % Normalizing the eigenfaces to unit length is important!

@@ -1,8 +1,16 @@
 function [train, test, id_list] = read_data(data_folder, num_ids, ims_per_id, samples_per_id, H, W)
     % Read all images into a large matrix
+    
+    % num columns
     num_feats = H*W;
+    
+    % total num images
     num_ims = num_ids * ims_per_id;
+    
+    % num training images
     num_samples = num_ids * samples_per_id;
+    
+    % Make train, test sets + labels
     train = double(zeros( [num_samples, num_feats] ));
     test = double(zeros( [num_ims - num_samples, num_feats] ));
     id_list = zeros( [num_ids,1] );

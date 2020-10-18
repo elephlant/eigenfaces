@@ -8,9 +8,9 @@ function [predictions, acc] = nn_trial(test,samples_per_id,id_list,avg_face_vec,
         
     trunc_eigfaces = sorted_eigfaces(1:M,:);
     
-    % Each column is a test sample represented by eigenface-weights
+    % Each column is a test sample projected on M-eigenfaces
     test_reps = trunc_eigfaces * (test.' - avg_face_vec.');
-    % After transpose, each row is a test sample in face-space
+    % Each row is a test sample now (for use in pdist2)
     test_reps = test_reps.';
     
     % The jth column contains all class scores for the jth test sample
